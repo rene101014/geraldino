@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
+import { motion, useAnimation, useInView, type Variants } from "motion/react";
+import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 
 const EASE_OUT_QUART = [0.25, 1, 0.5, 1] as const;
@@ -23,11 +24,28 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+      return;
+    }
+    // Some mobile Safari builds fail to redeliver IntersectionObserver
+    // callbacks while the URL bar collapses mid-scroll, leaving content
+    // stuck at opacity:0 forever. Force it visible after a short delay so
+    // a missed trigger never permanently hides real content.
+    const timeout = setTimeout(() => controls.start("visible"), 1800);
+    return () => clearTimeout(timeout);
+  }, [inView, controls]);
+
   return (
     <motion.div
+      ref={ref}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      animate={controls}
       variants={variants}
       transition={{ duration: 0.7, ease: EASE_OUT_QUART, delay }}
       className={className}
