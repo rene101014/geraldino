@@ -103,6 +103,37 @@
        claro sobre fondo casi negro. */
     color-scheme: dark;
   }
+
+  /* Animación de entrada — ver components/site/reveal.tsx.
+     El estado oculto SOLO aplica si el script inline de app/layout.tsx puso
+     data-reveal="on" en <html> antes del primer pintado. Sin JS, sin este
+     atributo, y el contenido se ve normal. */
+  [data-reveal="on"] [data-reveal-item] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  [data-reveal-item] {
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-reveal-item][data-shown="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal="on"] [data-reveal-item] {
+      opacity: 1;
+      transform: none;
+    }
+    [data-reveal-item] {
+      transition: none;
+    }
+  }
+
   a,
   button {
     touch-action: manipulation;

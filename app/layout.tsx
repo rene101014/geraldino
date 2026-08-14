@@ -50,6 +50,29 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
       style={themeToCssVars(theme)}
     >
+      <head>
+        {/*
+          Arma la animación de entrada ANTES del primer pintado, para que no
+          haya flash de contenido visible -> oculto -> visible.
+
+          El failsafe es lo importante: pase lo que pase, a los 2.5s se quita
+          el atributo y todo queda visible. No depende de React ni del
+          observer. Si la hidratación falla o el JS del bundle revienta, el
+          contenido aparece igual — que es exactamente el modo de fallo que
+          rompió este sitio cuatro veces.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{
+if(typeof IntersectionObserver==="undefined")return;
+if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+var h=document.documentElement;
+h.setAttribute("data-reveal","on");
+setTimeout(function(){if(!h.hasAttribute("data-reveal-ready"))h.removeAttribute("data-reveal")},2500);
+}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <TooltipProvider>
           {children}
