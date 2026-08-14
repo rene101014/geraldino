@@ -4,6 +4,10 @@ import { getPortfolioItems } from "@/lib/data/portfolio";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import { PortfolioGrid } from "@/components/portfolio/portfolio-grid";
 
+// ISR: generada una vez y servida desde el edge cache de Vercel. Se
+// regenera a los 5 min o cuando el admin invalida los tags.
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Portafolio",
   description:

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getServices } from "@/lib/data/services";
 import { getSiteContent } from "@/lib/data/content";
 import { getSiteUrl } from "@/lib/seo/site-url";
@@ -10,18 +11,16 @@ export const metadata: Metadata = {
   alternates: { canonical: `${getSiteUrl()}/contacto` },
 };
 
-export default async function ContactoPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ servicio?: string }>;
-}) {
-  const [{ servicio }, services, content] = await Promise.all([
-    searchParams,
+// ISR: la página se genera una vez y Vercel la sirve desde su edge cache,
+// como un archivo estático. Se regenera a los 5 min o cuando el admin
+// invalida los tags correspondientes.
+export const revalidate = 300;
+
+export default async function ContactoPage() {
+  const [services, content] = await Promise.all([
     getServices(),
     getSiteContent(),
   ]);
-
-  const initialService = services.find((s) => s.slug === servicio)?.title;
 
   return (
     <main className="px-6 pb-20 pt-36 md:pb-28 md:pt-44">
@@ -70,10 +69,11 @@ export default async function ContactoPage({
           </dl>
         </div>
 
-        <ContactForm
-          services={services.map((s) => s.title)}
-          initialService={initialService}
-        />
+        <Suspense fallback={null}>
+          <ContactForm
+            services={services.map((s) => ({ slug: s.slug, title: s.title }))}
+          />
+        </Suspense>
       </div>
     </main>
   );

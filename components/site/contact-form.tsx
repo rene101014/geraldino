@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,13 +26,19 @@ const BUDGET_RANGES = [
 
 const initialState: ContactState = { error: null, success: false };
 
+// `services` llega como {slug,title} y el ?servicio= se lee aquí en el
+// cliente. Antes la page hacía `await searchParams`, lo que obligaba a
+// Next a renderizar /contacto por request y le quitaba el cacheo de CDN.
 export function ContactForm({
   services,
-  initialService,
 }: {
-  services: string[];
-  initialService?: string;
+  services: { slug: string; title: string }[];
 }) {
+  const searchParams = useSearchParams();
+  const initialService = services.find(
+    (s) => s.slug === searchParams.get("servicio"),
+  )?.title;
+
   const [state, formAction, pending] = useActionState(submitContactLead, initialState);
 
   useEffect(() => {
@@ -86,8 +93,8 @@ export function ContactForm({
             </SelectTrigger>
             <SelectContent>
               {services.map((service) => (
-                <SelectItem key={service} value={service}>
-                  {service}
+                <SelectItem key={service.slug} value={service.title}>
+                  {service.title}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -11,6 +11,10 @@ import { BioSection } from "@/components/site/bio-section";
 import { ServicesIndex } from "@/components/site/services-index";
 import { CtaBand } from "@/components/site/cta-band";
 
+// ISR: generada una vez y servida desde el edge cache de Vercel. Se
+// regenera a los 5 min o cuando el admin invalida los tags.
+export const revalidate = 300;
+
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getSiteContent();
   const title = content?.meta_title ?? "Geraldino";
