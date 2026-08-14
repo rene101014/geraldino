@@ -16,13 +16,18 @@ export function Hero({
 }) {
   return (
     <section className="relative overflow-hidden px-6 pb-24 pt-36 md:pt-44">
+      {/* Los halos usaban size-[42rem]/blur-[140px] y size-[36rem]/blur-[160px].
+          Un filtro de desenfoque de ese radio sobre un elemento de ~670px
+          obliga a WebKit a rasterizar un buffer enorme fuera de pantalla en
+          cada repintado, lo que en iPhone se traduce en scroll trabado.
+          Se reduce el radio y el tamaño manteniendo el mismo efecto visual. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-40 top-0 size-[42rem] rounded-full bg-primary/25 blur-[140px]"
+        className="pointer-events-none absolute -right-32 top-0 size-[26rem] rounded-full bg-primary/25 blur-[80px]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-52 top-1/3 size-[36rem] rounded-full bg-primary/10 blur-[160px]"
+        className="pointer-events-none absolute -left-32 top-1/3 size-[22rem] rounded-full bg-primary/10 blur-[90px]"
       />
 
       <div className="relative mx-auto max-w-6xl">

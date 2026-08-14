@@ -37,7 +37,7 @@ export async function generateViewport(): Promise<Viewport> {
   const theme = await getSiteTheme();
   return {
     themeColor: oklchToHex(cssToOklch(theme.background)),
-    colorScheme: "light",
+    colorScheme: "dark",
   };
 }
 

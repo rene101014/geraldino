@@ -97,7 +97,11 @@
   }
   html {
     @apply font-sans;
-    color-scheme: light;
+    /* La paleta por defecto es oscura (--background 0.09). Declarar
+       color-scheme: light hacía que Safari/iOS pintara los controles
+       nativos (inputs del formulario de contacto, scrollbars) en modo
+       claro sobre fondo casi negro. */
+    color-scheme: dark;
   }
   a,
   button {
