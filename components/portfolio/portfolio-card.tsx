@@ -1,38 +1,23 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "motion/react";
 import { Volume2 } from "lucide-react";
 import { storagePublicUrl } from "@/lib/storage/public-url";
 import type { PortfolioItem } from "@/lib/data/portfolio";
 
+// Antes este tile usaba motion/react (useScroll + useTransform) para un
+// efecto parallax por columna. Es el mismo patrón que causaba el bug de
+// Reveal en iOS Safari (contenido/tiles que aparecían y desaparecían con
+// el scroll, botones que dejaban de responder). Se quitó por la misma
+// razón: ver components/site/reveal.tsx.
 export function PortfolioCard({
   item,
   onOpen,
-  index = 0,
 }: {
   item: PortfolioItem;
   onOpen: () => void;
   index?: number;
 }) {
-  const ref = useRef<HTMLButtonElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  // Cada tile se mueve a un ritmo/dirección ligeramente distinto según su
-  // columna, para que el grid se sienta vivo con el scroll (no solo los
-  // videos reproduciéndose) — inspirado en el grid de trabajo de btanc.do.
-  const range = 10 + (index % 3) * 4;
-  const direction = index % 2 === 0 ? 1 : -1;
-  const y = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [`${-range * direction}%`, `${range * direction}%`],
-  );
-
   const thumbPath = item.thumbnail_path ?? item.storage_path;
   const thumbUrl = thumbPath ? storagePublicUrl("portfolio", thumbPath) : null;
   const videoUrl =
@@ -42,12 +27,11 @@ export function PortfolioCard({
 
   return (
     <button
-      ref={ref}
       type="button"
       onClick={onOpen}
       className="group relative block aspect-[4/5] w-full overflow-hidden bg-muted text-left sm:aspect-square"
     >
-      <motion.div style={{ y }} className="absolute -top-[15%] -bottom-[15%] inset-x-0">
+      <div className="absolute inset-0">
         {videoUrl ? (
           <video
             src={videoUrl}
@@ -56,7 +40,7 @@ export function PortfolioCard({
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
           />
         ) : thumbUrl ? (
@@ -68,7 +52,7 @@ export function PortfolioCard({
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
           />
         ) : null}
-      </motion.div>
+      </div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-90" />
 
