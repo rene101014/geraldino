@@ -36,7 +36,7 @@ export function SiteHeader({ brandName }: { brandName: string }) {
           {brandName}
         </Link>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-border/60 bg-background/60 p-1.5 backdrop-blur-xl md:flex">
+        <nav className="hidden items-center gap-1 rounded-full border border-border/60 bg-background/95 p-1.5 md:flex">
           {NAV_ITEMS.map((item) => {
             const active =
               item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
@@ -68,7 +68,7 @@ export function SiteHeader({ brandName }: { brandName: string }) {
           <SheetTrigger asChild>
             <button
               type="button"
-              className="flex size-11 items-center justify-center rounded-full border border-border/60 bg-background/60 text-foreground backdrop-blur-xl md:hidden"
+              className="flex size-11 items-center justify-center rounded-full border border-border/60 bg-background/95 text-foreground md:hidden"
               aria-label="Abrir menú"
             >
               <Menu className="size-5" />
