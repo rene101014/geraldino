@@ -24,7 +24,10 @@ export function SiteHeader({ brandName }: { brandName: string }) {
   const pathname = usePathname();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6">
+    <header
+      className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-6"
+      style={{ transform: "translateZ(0)", WebkitBackfaceVisibility: "hidden" }}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between">
         <Link
           href="/"

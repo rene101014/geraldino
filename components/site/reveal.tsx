@@ -49,6 +49,15 @@ export function Reveal({
       variants={variants}
       transition={{ duration: 0.7, ease: EASE_OUT_QUART, delay }}
       className={className}
+      onAnimationComplete={(variant) => {
+        // iOS Safari can fail to recomposite elements left with a resting
+        // (non-"none") transform matrix once they scroll past the fixed,
+        // backdrop-blurred header, making them flicker or vanish. Dropping
+        // the transform once the slide-up finishes avoids leaving one behind.
+        if (variant === "visible" && ref.current) {
+          ref.current.style.transform = "none";
+        }
+      }}
     >
       {children}
     </motion.div>
