@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Bricolage_Grotesque } from "next/font/google";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/sonner";
+import { Geist, Bricolage_Grotesque } from "next/font/google";
 import { getSiteTheme } from "@/lib/data/theme";
 import { themeToCssVars } from "@/lib/theme/css-vars";
 import { getSiteUrl } from "@/lib/seo/site-url";
@@ -10,11 +8,6 @@ import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -47,7 +40,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${bricolage.variable} h-full antialiased`}
       style={themeToCssVars(theme)}
     >
       <head>
@@ -73,12 +66,7 @@ setTimeout(function(){if(!h.hasAttribute("data-reveal-ready"))h.removeAttribute(
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col">
-        <TooltipProvider>
-          {children}
-          <Toaster />
-        </TooltipProvider>
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

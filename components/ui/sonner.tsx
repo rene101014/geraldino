@@ -1,15 +1,16 @@
 "use client"
 
-import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
+// Sin next-themes: no había ningún <ThemeProvider> montado, así que
+// useTheme() siempre devolvía "system" — un no-op. El sitio tiene una sola
+// paleta oscura fija (ver color-scheme: dark en globals.css), así que el
+// toaster usa ese mismo tema directo.
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
-
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme="dark"
       className="toaster group"
       icons={{
         success: (

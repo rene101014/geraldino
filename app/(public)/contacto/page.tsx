@@ -4,6 +4,7 @@ import { getServices } from "@/lib/data/services";
 import { getSiteContent } from "@/lib/data/content";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import { ContactForm } from "@/components/site/contact-form";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Contacto",
@@ -75,6 +76,7 @@ export default async function ContactoPage() {
           />
         </Suspense>
       </div>
+      <Toaster />
     </main>
   );
 }

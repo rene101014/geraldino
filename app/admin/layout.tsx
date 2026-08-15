@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 // El admin usa una paleta neutra fija, independiente del tema editable del
 // sitio público — una herramienta de trabajo no debería volverse ilegible
@@ -37,6 +38,7 @@ export default function AdminRootLayout({
   return (
     <div style={ADMIN_THEME} className="min-h-screen bg-background text-foreground">
       {children}
+      <Toaster />
     </div>
   );
 }
