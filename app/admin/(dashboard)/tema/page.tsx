@@ -1,12 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
+import { unwrap } from "@/lib/data/fetch-or-throw";
 import { DEFAULT_THEME } from "@/lib/theme/defaults";
 import { cssToOklch, oklchToHex } from "@/lib/theme/color";
 import { ThemeForm } from "@/components/admin/theme-editor/theme-form";
 
 export default async function AdminThemePage() {
   const supabase = await createClient();
-  const { data } = await supabase.from("site_theme").select("*").eq("id", 1).single();
-  const theme = data ?? DEFAULT_THEME;
+  const res = await supabase.from("site_theme").select("*").eq("id", 1).single();
+  const theme = unwrap(res, "el tema del sitio") ?? DEFAULT_THEME;
 
   return (
     <div>

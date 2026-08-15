@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -136,8 +137,16 @@ function LeadRow({ lead, onOpen }: { lead: Lead; onOpen: () => void }) {
         <Select
           value={status}
           onValueChange={(value) => {
+            const previous = status;
             setStatus(value);
-            startTransition(() => updateLeadStatus(lead.id, value));
+            startTransition(async () => {
+              try {
+                await updateLeadStatus(lead.id, value);
+              } catch {
+                setStatus(previous);
+                toast.error("No se pudo actualizar el estado. Intenta de nuevo.");
+              }
+            });
           }}
         >
           <SelectTrigger size="sm" className="w-full">

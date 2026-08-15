@@ -4,9 +4,13 @@ import { Reveal } from "@/components/site/reveal";
 export function CtaBand() {
   return (
     <section className="relative overflow-hidden border-t border-border px-6 py-28 md:py-40">
+      {/* Mismo ajuste que en hero.tsx: size-[44rem]/blur-[160px] obligaba a
+          WebKit a rasterizar un buffer enorme fuera de pantalla en cada
+          repintado (scroll trabado en iPhone). Se reduce manteniendo el
+          mismo efecto visual. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-1/2 top-1/2 size-[44rem] -translate-y-1/2 translate-x-1/2 rounded-full bg-primary/20 blur-[160px]"
+        className="pointer-events-none absolute right-1/2 top-1/2 size-[27rem] -translate-y-1/2 translate-x-1/2 rounded-full bg-primary/20 blur-[95px]"
       />
 
       <div className="relative mx-auto max-w-6xl text-center">

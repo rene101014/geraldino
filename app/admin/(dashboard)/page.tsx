@@ -61,6 +61,11 @@ export default async function AdminDashboardPage() {
     supabase.from("contact_submissions").select("id", { count: "exact", head: true }),
   ]);
 
+  const firstError = [portfolio, services, clients, leads].find((r) => r.error)?.error;
+  if (firstError) {
+    throw new Error(`Supabase: no se pudieron leer los conteos del panel: ${firstError.message}`);
+  }
+
   const counts: Record<string, number> = {
     portfolio_items: portfolio.count ?? 0,
     services: services.count ?? 0,

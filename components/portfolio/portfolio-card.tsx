@@ -59,7 +59,7 @@ export function PortfolioCard({
       {item.media_type === "video" ? (
         <span
           aria-hidden="true"
-          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/40 text-white/80 backdrop-blur"
+          className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-full bg-black/60 text-white/80"
         >
           <Volume2 className="size-4" />
         </span>

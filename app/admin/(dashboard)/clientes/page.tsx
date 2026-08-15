@@ -1,13 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
+import { unwrap } from "@/lib/data/fetch-or-throw";
 import { ClientForm } from "@/components/admin/client-form";
 import { ClientsList } from "@/components/admin/clients-list";
 
 export default async function AdminClientsPage() {
   const supabase = await createClient();
-  const { data: clients } = await supabase
+  const res = await supabase
     .from("clients")
     .select("*")
     .order("order_index", { ascending: true });
+  const clients = unwrap(res, "los clientes");
 
   return (
     <div>

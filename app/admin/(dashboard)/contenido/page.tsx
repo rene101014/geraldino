@@ -1,13 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
+import { unwrap } from "@/lib/data/fetch-or-throw";
 import { ContentForm } from "@/components/admin/content-form";
 
 export default async function AdminContentPage() {
   const supabase = await createClient();
-  const { data: content } = await supabase
-    .from("site_content")
-    .select("*")
-    .eq("id", 1)
-    .single();
+  const res = await supabase.from("site_content").select("*").eq("id", 1).single();
+  const content = unwrap(res, "el contenido del sitio");
 
   if (!content) return null;
 

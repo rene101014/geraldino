@@ -1,12 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
+import { unwrap } from "@/lib/data/fetch-or-throw";
 import { LeadsTable } from "@/components/admin/leads-table";
 
 export default async function AdminLeadsPage() {
   const supabase = await createClient();
-  const { data: leads } = await supabase
+  const res = await supabase
     .from("contact_submissions")
     .select("*")
     .order("created_at", { ascending: false });
+  const leads = unwrap(res, "los mensajes");
 
   return (
     <div>
