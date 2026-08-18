@@ -123,6 +123,7 @@ export type Database = {
           provider: string
           published: boolean
           service_id: string | null
+          show_caption: boolean
           slug: string | null
           storage_path: string | null
           tags: string[]
@@ -147,6 +148,7 @@ export type Database = {
           provider?: string
           published?: boolean
           service_id?: string | null
+          show_caption?: boolean
           slug?: string | null
           storage_path?: string | null
           tags?: string[]
@@ -171,6 +173,7 @@ export type Database = {
           provider?: string
           published?: boolean
           service_id?: string | null
+          show_caption?: boolean
           slug?: string | null
           storage_path?: string | null
           tags?: string[]

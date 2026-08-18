@@ -20,6 +20,8 @@ import {
 import { mediaUrl } from "@/lib/storage/public-url";
 import {
   togglePortfolioPublished,
+  togglePortfolioFeatured,
+  togglePortfolioCaption,
   deletePortfolioItem,
 } from "@/app/admin/(dashboard)/portafolio/actions";
 import type { PortfolioItem } from "@/lib/data/portfolio";
@@ -45,6 +47,8 @@ export function PortfolioList({ items }: { items: PortfolioItem[] }) {
 
 function PortfolioListItem({ item }: { item: PortfolioItem }) {
   const [published, setPublished] = useState(item.published);
+  const [featured, setFeatured] = useState(item.is_featured);
+  const [showCaption, setShowCaption] = useState(item.show_caption);
   const [pending, startTransition] = useTransition();
   const thumbPath = item.thumbnail_path ?? item.storage_path;
   const thumbUrl = thumbPath ? mediaUrl("portfolio", thumbPath) : null;
@@ -67,23 +71,15 @@ function PortfolioListItem({ item }: { item: PortfolioItem }) {
           </span>
         ) : null}
       </div>
-      <div className="flex items-center justify-between gap-2 p-3">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium">{item.title}</p>
-          <p className="truncate text-xs text-muted-foreground">{item.category}</p>
-        </div>
-        <div className="flex shrink-0 items-center gap-1">
-          <Switch
-            checked={published}
-            disabled={pending}
-            onCheckedChange={(value) => {
-              setPublished(value);
-              startTransition(() => togglePortfolioPublished(item.id, value));
-            }}
-          />
+      <div className="p-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium">{item.title}</p>
+            <p className="truncate text-xs text-muted-foreground">{item.category}</p>
+          </div>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="shrink-0">
                 <Trash2 className="size-4" />
               </Button>
             </AlertDialogTrigger>
@@ -107,6 +103,42 @@ function PortfolioListItem({ item }: { item: PortfolioItem }) {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        </div>
+
+        <div className="mt-3 space-y-2 border-t border-border pt-3">
+          <label className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+            Publicado
+            <Switch
+              checked={published}
+              disabled={pending}
+              onCheckedChange={(value) => {
+                setPublished(value);
+                startTransition(() => togglePortfolioPublished(item.id, value));
+              }}
+            />
+          </label>
+          <label className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+            Destacado en inicio
+            <Switch
+              checked={featured}
+              disabled={pending}
+              onCheckedChange={(value) => {
+                setFeatured(value);
+                startTransition(() => togglePortfolioFeatured(item.id, value));
+              }}
+            />
+          </label>
+          <label className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+            Mostrar nombre y categoría
+            <Switch
+              checked={showCaption}
+              disabled={pending}
+              onCheckedChange={(value) => {
+                setShowCaption(value);
+                startTransition(() => togglePortfolioCaption(item.id, value));
+              }}
+            />
+          </label>
         </div>
       </div>
     </div>

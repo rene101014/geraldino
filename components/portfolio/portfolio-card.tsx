@@ -74,12 +74,14 @@ export function PortfolioCard({
         </span>
       ) : null}
 
-      <div className="absolute inset-x-0 bottom-0 p-4">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-white/70">
-          {item.category}
-        </p>
-        <p className="font-heading text-white">{item.title}</p>
-      </div>
+      {item.show_caption ? (
+        <div className="absolute inset-x-0 bottom-0 p-4">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-white/70">
+            {item.category}
+          </p>
+          <p className="font-heading text-white">{item.title}</p>
+        </div>
+      ) : null}
     </button>
   );
 }

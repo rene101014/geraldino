@@ -14,7 +14,7 @@ export function ServicesIndex({ services }: { services: Service[] }) {
           <div className="flex items-end justify-between">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-                04 — Servicios
+                03 — Servicios
               </p>
               <h2 className="font-heading mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
                 Qué se produce

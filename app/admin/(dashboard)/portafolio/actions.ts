@@ -61,6 +61,20 @@ export async function togglePortfolioPublished(id: string, published: boolean) {
   revalidatePath("/", "layout");
 }
 
+export async function togglePortfolioFeatured(id: string, is_featured: boolean) {
+  const supabase = await createClient();
+  await supabase.from("portfolio_items").update({ is_featured }).eq("id", id);
+  revalidateTag("portfolio-items", "max");
+  revalidatePath("/", "layout");
+}
+
+export async function togglePortfolioCaption(id: string, show_caption: boolean) {
+  const supabase = await createClient();
+  await supabase.from("portfolio_items").update({ show_caption }).eq("id", id);
+  revalidateTag("portfolio-items", "max");
+  revalidatePath("/", "layout");
+}
+
 export async function deletePortfolioItem(id: string) {
   const supabase = await createClient();
 

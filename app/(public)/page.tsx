@@ -9,7 +9,6 @@ import { Hero } from "@/components/site/hero";
 import { FeaturedWork } from "@/components/site/featured-work";
 import { BioSection } from "@/components/site/bio-section";
 import { ServicesIndex } from "@/components/site/services-index";
-import { CtaBand } from "@/components/site/cta-band";
 
 // ISR: generada una vez y servida desde el edge cache de Vercel. Se
 // regenera a los 5 min o cuando el admin invalida los tags.
@@ -51,6 +50,11 @@ export default async function HomePage() {
   const brandName = content?.brand_name ?? "Geraldino";
   const founderName = content?.founder_name ?? "Rene Geraldino";
 
+  // Mientras el admin no marque nada como destacado, se muestran los
+  // últimos items publicados para que el inicio nunca quede vacío.
+  const featured = portfolioItems.filter((item) => item.is_featured);
+  const featuredWork = (featured.length > 0 ? featured : portfolioItems).slice(0, 5);
+
   return (
     <main>
       {content ? (
@@ -69,14 +73,13 @@ export default async function HomePage() {
         heroSubtitle={content?.hero_subtitle ?? ""}
         heroCtaLabel={content?.hero_cta_label ?? "Ver portafolio"}
       />
-      <FeaturedWork items={portfolioItems.slice(0, 5)} />
+      <FeaturedWork items={featuredWork} />
+      <ServicesIndex services={services} />
       <BioSection
         heading={content?.bio_heading ?? "Sobre Geraldino"}
         body={content?.bio_body ?? ""}
         founderName={founderName}
       />
-      <ServicesIndex services={services} />
-      <CtaBand />
     </main>
   );
 }

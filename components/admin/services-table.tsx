@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Pencil } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -27,6 +27,7 @@ import {
 import {
   updateService,
   toggleServicePublished,
+  createService,
   type ServiceFormState,
 } from "@/app/admin/(dashboard)/servicios/actions";
 import type { Service } from "@/lib/data/services";
@@ -35,9 +36,17 @@ const initialState: ServiceFormState = { error: null, success: false };
 
 export function ServicesTable({ services }: { services: Service[] }) {
   const [editing, setEditing] = useState<Service | null>(null);
+  const [creating, setCreating] = useState(false);
 
   return (
     <>
+      <div className="flex justify-end">
+        <Button onClick={() => setCreating(true)}>
+          <Plus className="mr-1 size-4" />
+          Nuevo servicio
+        </Button>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -59,6 +68,10 @@ export function ServicesTable({ services }: { services: Service[] }) {
         {editing ? (
           <EditServiceDialog service={editing} onDone={() => setEditing(null)} />
         ) : null}
+      </Dialog>
+
+      <Dialog open={creating} onOpenChange={setCreating}>
+        <CreateServiceDialog onDone={() => setCreating(false)} />
       </Dialog>
     </>
   );
@@ -161,6 +174,45 @@ function EditServiceDialog({
         <DialogFooter>
           <Button type="submit" disabled={pending}>
             {pending ? "Guardando…" : "Guardar"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  );
+}
+
+function CreateServiceDialog({ onDone }: { onDone: () => void }) {
+  const [state, formAction, pending] = useActionState(createService, initialState);
+
+  useEffect(() => {
+    if (state.success) {
+      toast.success("Servicio creado");
+      onDone();
+    }
+    if (state.error) toast.error(state.error);
+  }, [state, onDone]);
+
+  return (
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Nuevo servicio</DialogTitle>
+      </DialogHeader>
+      <form action={formAction} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="new-title">Título</Label>
+          <Input id="new-title" name="title" required />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="new-description">Descripción</Label>
+          <Textarea id="new-description" name="description" rows={3} required />
+        </div>
+        <div className="flex items-center gap-2">
+          <Switch id="new-is-addon" name="is_addon" />
+          <Label htmlFor="new-is-addon">Es un addon (se suma a otro servicio)</Label>
+        </div>
+        <DialogFooter>
+          <Button type="submit" disabled={pending}>
+            {pending ? "Creando…" : "Crear servicio"}
           </Button>
         </DialogFooter>
       </form>
