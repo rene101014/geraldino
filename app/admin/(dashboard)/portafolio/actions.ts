@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { portfolioItemFormSchema } from "@/lib/validations/portfolio";
+import { isExternalUrl } from "@/lib/storage/public-url";
 
 export type PortfolioFormState = { error: string | null; success: boolean };
 
@@ -15,7 +16,9 @@ export async function createPortfolioItem(
     description: formData.get("description"),
     category: formData.get("category"),
     media_type: formData.get("media_type"),
+    provider: formData.get("provider") || "supabase",
     storage_path: formData.get("storage_path"),
+    external_id: formData.get("external_id"),
     thumbnail_path: formData.get("thumbnail_path"),
   });
 
@@ -33,8 +36,9 @@ export async function createPortfolioItem(
     description: parsed.data.description || null,
     category: parsed.data.category,
     media_type: parsed.data.media_type,
-    provider: "supabase",
-    storage_path: parsed.data.storage_path,
+    provider: parsed.data.provider,
+    storage_path: parsed.data.storage_path || null,
+    external_id: parsed.data.external_id || null,
     thumbnail_path: parsed.data.thumbnail_path || null,
     order_index: count ?? 0,
     published: true,
@@ -69,7 +73,7 @@ export async function deletePortfolioItem(id: string) {
   await supabase.from("portfolio_items").delete().eq("id", id);
 
   const paths = [item?.storage_path, item?.thumbnail_path].filter(
-    (p): p is string => !!p,
+    (p): p is string => !!p && !isExternalUrl(p),
   );
   if (paths.length > 0) {
     await supabase.storage.from("portfolio").remove(paths);

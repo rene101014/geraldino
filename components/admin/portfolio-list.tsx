@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { storagePublicUrl } from "@/lib/storage/public-url";
+import { mediaUrl } from "@/lib/storage/public-url";
 import {
   togglePortfolioPublished,
   deletePortfolioItem,
@@ -47,7 +47,7 @@ function PortfolioListItem({ item }: { item: PortfolioItem }) {
   const [published, setPublished] = useState(item.published);
   const [pending, startTransition] = useTransition();
   const thumbPath = item.thumbnail_path ?? item.storage_path;
-  const thumbUrl = thumbPath ? storagePublicUrl("portfolio", thumbPath) : null;
+  const thumbUrl = thumbPath ? mediaUrl("portfolio", thumbPath) : null;
 
   return (
     <div className="overflow-hidden rounded-xl border border-border">

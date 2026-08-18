@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Volume2 } from "lucide-react";
 import { storagePublicUrl } from "@/lib/storage/public-url";
+import { VimeoEmbed } from "@/components/portfolio/vimeo-embed";
 import type { PortfolioItem } from "@/lib/data/portfolio";
 
 // Antes este tile usaba motion/react (useScroll + useTransform) para un
@@ -20,8 +21,9 @@ export function PortfolioCard({
 }) {
   const thumbPath = item.thumbnail_path ?? item.storage_path;
   const thumbUrl = thumbPath ? storagePublicUrl("portfolio", thumbPath) : null;
+  const isVimeo = item.provider === "vimeo" && !!item.external_id;
   const videoUrl =
-    item.media_type === "video" && item.storage_path
+    !isVimeo && item.media_type === "video" && item.storage_path
       ? storagePublicUrl("portfolio", item.storage_path)
       : null;
 
@@ -32,7 +34,14 @@ export function PortfolioCard({
       className="group relative block aspect-[4/5] w-full overflow-hidden bg-muted text-left sm:aspect-square"
     >
       <div className="absolute inset-0">
-        {videoUrl ? (
+        {isVimeo ? (
+          <VimeoEmbed
+            id={item.external_id!}
+            title={item.title}
+            background
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+          />
+        ) : videoUrl ? (
           <video
             src={videoUrl}
             poster={thumbUrl ?? undefined}

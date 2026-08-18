@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VideoPlayer } from "@/components/portfolio/video-player/video-player";
+import { VimeoEmbed } from "@/components/portfolio/vimeo-embed";
 import { resolveVideoSource } from "@/lib/video/resolve-video-source";
 import { storagePublicUrl } from "@/lib/storage/public-url";
 import type { PortfolioItem } from "@/lib/data/portfolio";
@@ -24,12 +25,18 @@ export function Lightbox({
         {item ? (
           <div className="overflow-hidden rounded-2xl bg-foreground shadow-2xl">
             {item.media_type === "video" ? (
-              <VideoPlayer
-                source={resolveVideoSource(item)}
-                title={item.title}
-                autoPlay
-                className="rounded-none"
-              />
+              item.provider === "vimeo" && item.external_id ? (
+                <div className="relative aspect-video w-full overflow-hidden bg-black">
+                  <VimeoEmbed id={item.external_id} title={item.title} />
+                </div>
+              ) : (
+                <VideoPlayer
+                  source={resolveVideoSource(item)}
+                  title={item.title}
+                  autoPlay
+                  className="rounded-none"
+                />
+              )
             ) : (
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-black sm:aspect-video">
                 <Image
