@@ -22,7 +22,7 @@ export function BioSection({
           <Reveal>
             <div className="md:sticky md:top-28">
               <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-                04 — Perfil
+                Perfil
               </p>
               <h2 className="font-heading mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
                 {heading}

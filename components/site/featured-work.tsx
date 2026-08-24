@@ -17,7 +17,7 @@ export function FeaturedWork({ items }: { items: PortfolioItem[] }) {
       <div className="px-6 pt-24 md:pt-32">
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-            02 — Trabajo
+            Trabajo
           </p>
           <h2 className="font-heading mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
             Lo último producido
