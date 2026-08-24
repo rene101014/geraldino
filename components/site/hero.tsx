@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Reveal } from "@/components/site/reveal";
 
 export function Hero({
@@ -7,12 +8,14 @@ export function Hero({
   heroTitle,
   heroSubtitle,
   heroCtaLabel,
+  logoUrl,
 }: {
   brandName: string;
   founderName: string;
   heroTitle: string;
   heroSubtitle: string;
   heroCtaLabel: string;
+  logoUrl?: string | null;
 }) {
   return (
     <section className="relative overflow-hidden px-6 pb-24 pt-36 md:pt-44">
@@ -43,18 +46,36 @@ export function Hero({
         </div>
 
         <Reveal delay={0.08}>
-          <h1 className="font-heading mt-6 text-balance text-[clamp(3.25rem,10vw,8.5rem)] font-black leading-[0.9] tracking-tighter">
-            {heroTitle === brandName ? (
-              brandName
-            ) : (
-              <>
-                {brandName}
-                <span className="block font-light italic text-foreground/30">
+          {logoUrl ? (
+            <h1 className="mt-8">
+              <Image
+                src={logoUrl}
+                alt={brandName}
+                width={520}
+                height={160}
+                priority
+                className="h-[clamp(4.5rem,14vw,11rem)] w-auto object-contain"
+              />
+              {heroTitle !== brandName ? (
+                <span className="mt-4 block max-w-2xl font-heading text-2xl font-light italic text-foreground/30 md:text-4xl">
                   {heroTitle}
                 </span>
-              </>
-            )}
-          </h1>
+              ) : null}
+            </h1>
+          ) : (
+            <h1 className="font-heading mt-6 text-balance text-[clamp(3.25rem,10vw,8.5rem)] font-black leading-[0.9] tracking-tighter">
+              {heroTitle === brandName ? (
+                brandName
+              ) : (
+                <>
+                  {brandName}
+                  <span className="block font-light italic text-foreground/30">
+                    {heroTitle}
+                  </span>
+                </>
+              )}
+            </h1>
+          )}
         </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-[1.4fr_1fr] md:items-end">

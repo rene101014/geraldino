@@ -5,6 +5,7 @@ import { getSocialLinks } from "@/lib/data/social-links";
 import { getPortfolioItems } from "@/lib/data/portfolio";
 import { getSiteUrl } from "@/lib/seo/site-url";
 import { buildOrganizationJsonLd } from "@/lib/seo/jsonld";
+import { mediaUrl } from "@/lib/storage/public-url";
 import { Hero } from "@/components/site/hero";
 import { FeaturedWork } from "@/components/site/featured-work";
 import { BioSection } from "@/components/site/bio-section";
@@ -49,6 +50,7 @@ export default async function HomePage() {
 
   const brandName = content?.brand_name ?? "Geraldino";
   const founderName = content?.founder_name ?? "Rene Geraldino";
+  const logoUrl = content?.logo_path ? mediaUrl("site", content.logo_path) : null;
 
   // Mientras el admin no marque nada como destacado, se muestran los
   // últimos items publicados para que el inicio nunca quede vacío.
@@ -72,6 +74,7 @@ export default async function HomePage() {
         heroTitle={content?.hero_title ?? brandName}
         heroSubtitle={content?.hero_subtitle ?? ""}
         heroCtaLabel={content?.hero_cta_label ?? "Ver portafolio"}
+        logoUrl={logoUrl}
       />
       <FeaturedWork items={featuredWork} />
       <ServicesIndex services={services} />
