@@ -22,6 +22,7 @@ export async function updateContent(
     contact_phone: formData.get("contact_phone"),
     contact_whatsapp: formData.get("contact_whatsapp"),
     address: formData.get("address"),
+    logo_path: formData.get("logo_path"),
     meta_title: formData.get("meta_title"),
     meta_description: formData.get("meta_description"),
   });

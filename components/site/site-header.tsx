@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import {
@@ -20,7 +21,13 @@ const NAV_ITEMS = [
   { href: "/contacto", label: "Contacto" },
 ] as const;
 
-export function SiteHeader({ brandName }: { brandName: string }) {
+export function SiteHeader({
+  brandName,
+  logoUrl,
+}: {
+  brandName: string;
+  logoUrl?: string | null;
+}) {
   const pathname = usePathname();
 
   return (
@@ -29,11 +36,21 @@ export function SiteHeader({ brandName }: { brandName: string }) {
       style={{ transform: "translateZ(0)", WebkitBackfaceVisibility: "hidden" }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between">
-        <Link
-          href="/"
-          className="font-heading text-lg font-semibold tracking-tight text-foreground"
-        >
-          {brandName}
+        <Link href="/" className="flex items-center">
+          {logoUrl ? (
+            <Image
+              src={logoUrl}
+              alt={brandName}
+              width={140}
+              height={36}
+              priority
+              className="h-8 w-auto object-contain sm:h-9"
+            />
+          ) : (
+            <span className="font-heading text-lg font-semibold tracking-tight text-foreground">
+              {brandName}
+            </span>
+          )}
         </Link>
 
         <nav className="hidden items-center gap-1 rounded-full border border-border/60 bg-background/95 p-1.5 md:flex">

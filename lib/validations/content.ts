@@ -12,6 +12,7 @@ export const contentFormSchema = z.object({
   contact_phone: z.string().optional().or(z.literal("")),
   contact_whatsapp: z.string().optional().or(z.literal("")),
   address: z.string().optional().or(z.literal("")),
+  logo_path: z.string().optional().or(z.literal("")),
   meta_title: z.string().min(1, "Requerido"),
   meta_description: z.string().min(1, "Requerido"),
 });

@@ -1,4 +1,5 @@
 import { getSiteUrl } from "@/lib/seo/site-url";
+import { mediaUrl } from "@/lib/storage/public-url";
 import type { SiteContent } from "@/lib/data/content";
 import type { SocialLink } from "@/lib/data/social-links";
 
@@ -25,5 +26,6 @@ export function buildOrganizationJsonLd(
     ...(sameAs.length > 0 ? { sameAs } : {}),
     ...(content.contact_email ? { email: content.contact_email } : {}),
     ...(content.contact_phone ? { telephone: content.contact_phone } : {}),
+    ...(content.logo_path ? { logo: mediaUrl("site", content.logo_path) } : {}),
   };
 }

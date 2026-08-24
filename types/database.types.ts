@@ -246,6 +246,7 @@ export type Database = {
           hero_subtitle: string
           hero_title: string
           id: number
+          logo_path: string | null
           meta_description: string
           meta_title: string
           og_image_path: string | null
@@ -265,6 +266,7 @@ export type Database = {
           hero_subtitle?: string
           hero_title?: string
           id?: number
+          logo_path?: string | null
           meta_description?: string
           meta_title?: string
           og_image_path?: string | null
@@ -284,6 +286,7 @@ export type Database = {
           hero_subtitle?: string
           hero_title?: string
           id?: number
+          logo_path?: string | null
           meta_description?: string
           meta_title?: string
           og_image_path?: string | null
