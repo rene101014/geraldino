@@ -34,6 +34,210 @@ export type Database = {
   }
   public: {
     Tables: {
+      galleries: {
+        Row: {
+          allow_downloads: boolean
+          client_email: string | null
+          client_id: string | null
+          client_name: string | null
+          cover_photo_id: string | null
+          created_at: string
+          delivery_format: string
+          drive_folder_id: string | null
+          drive_folder_name: string | null
+          expires_at: string | null
+          id: string
+          last_synced_at: string | null
+          password_hash: string | null
+          selection_limit: number | null
+          status: string
+          title: string
+          token: string
+          type: string
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          allow_downloads?: boolean
+          client_email?: string | null
+          client_id?: string | null
+          client_name?: string | null
+          cover_photo_id?: string | null
+          created_at?: string
+          delivery_format?: string
+          drive_folder_id?: string | null
+          drive_folder_name?: string | null
+          expires_at?: string | null
+          id?: string
+          last_synced_at?: string | null
+          password_hash?: string | null
+          selection_limit?: number | null
+          status?: string
+          title: string
+          token: string
+          type?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          allow_downloads?: boolean
+          client_email?: string | null
+          client_id?: string | null
+          client_name?: string | null
+          cover_photo_id?: string | null
+          created_at?: string
+          delivery_format?: string
+          drive_folder_id?: string | null
+          drive_folder_name?: string | null
+          expires_at?: string | null
+          id?: string
+          last_synced_at?: string | null
+          password_hash?: string | null
+          selection_limit?: number | null
+          status?: string
+          title?: string
+          token?: string
+          type?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
+      gallery_photos: {
+        Row: {
+          created_at: string
+          drive_file_id: string
+          filename: string
+          gallery_id: string
+          height: number | null
+          id: string
+          mime_type: string | null
+          order_index: number
+          size_bytes: number | null
+          thumbnail_url: string | null
+          width: number | null
+        }
+        Insert: {
+          created_at?: string
+          drive_file_id: string
+          filename: string
+          gallery_id: string
+          height?: number | null
+          id?: string
+          mime_type?: string | null
+          order_index?: number
+          size_bytes?: number | null
+          thumbnail_url?: string | null
+          width?: number | null
+        }
+        Update: {
+          created_at?: string
+          drive_file_id?: string
+          filename?: string
+          gallery_id?: string
+          height?: number | null
+          id?: string
+          mime_type?: string | null
+          order_index?: number
+          size_bytes?: number | null
+          thumbnail_url?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
+      gallery_selection_items: {
+        Row: {
+          created_at: string
+          filename: string
+          gallery_photo_id: string
+          id: string
+          submission_id: string
+        }
+        Insert: {
+          created_at?: string
+          filename: string
+          gallery_photo_id: string
+          id?: string
+          submission_id: string
+        }
+        Update: {
+          created_at?: string
+          filename?: string
+          gallery_photo_id?: string
+          id?: string
+          submission_id?: string
+        }
+        Relationships: []
+      }
+      gallery_submissions: {
+        Row: {
+          client_email: string | null
+          client_name: string | null
+          gallery_id: string
+          id: string
+          note: string | null
+          selected_count: number
+          submitted_at: string
+        }
+        Insert: {
+          client_email?: string | null
+          client_name?: string | null
+          gallery_id: string
+          id?: string
+          note?: string | null
+          selected_count?: number
+          submitted_at?: string
+        }
+        Update: {
+          client_email?: string | null
+          client_name?: string | null
+          gallery_id?: string
+          id?: string
+          note?: string | null
+          selected_count?: number
+          submitted_at?: string
+        }
+        Relationships: []
+      }
+      google_tokens: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          expiry: string | null
+          google_email: string | null
+          id: string
+          refresh_token: string
+          scope: string | null
+          singleton: boolean
+          token_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string
+          expiry?: string | null
+          google_email?: string | null
+          id?: string
+          refresh_token: string
+          scope?: string | null
+          singleton?: boolean
+          token_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string
+          expiry?: string | null
+          google_email?: string | null
+          id?: string
+          refresh_token?: string
+          scope?: string | null
+          singleton?: boolean
+          token_type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       clients: {
         Row: {
           created_at: string
