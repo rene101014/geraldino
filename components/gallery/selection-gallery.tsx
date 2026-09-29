@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { Check, CheckCircle2 } from "lucide-react";
+import { Check, CheckCircle2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,6 +31,7 @@ export function SelectionGallery({
   alreadySubmitted: boolean;
 }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
@@ -40,21 +41,50 @@ export function SelectionGallery({
   const count = selected.size;
   const atLimit = limit != null && count >= limit;
 
-  function toggle(fileId: string) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(fileId)) {
-        next.delete(fileId);
-      } else {
-        if (limit != null && next.size >= limit) {
-          toast.error(`El cupo es de ${limit} fotos.`);
-          return prev;
+  const toggle = useCallback(
+    (fileId: string) => {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        if (next.has(fileId)) {
+          next.delete(fileId);
+        } else {
+          if (limit != null && next.size >= limit) {
+            toast.error(`El cupo es de ${limit} fotos.`);
+            return prev;
+          }
+          next.add(fileId);
         }
-        next.add(fileId);
+        return next;
+      });
+    },
+    [limit],
+  );
+
+  // Navegación del visor con teclado.
+  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const prev = useCallback(
+    () => setLightbox((i) => (i == null ? i : (i - 1 + photos.length) % photos.length)),
+    [photos.length],
+  );
+  const next = useCallback(
+    () => setLightbox((i) => (i == null ? i : (i + 1) % photos.length)),
+    [photos.length],
+  );
+
+  useEffect(() => {
+    if (lightbox == null) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+      else if (e.key === " ") {
+        e.preventDefault();
+        if (lightbox != null) toggle(photos[lightbox].drive_file_id);
       }
-      return next;
-    });
-  }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, closeLightbox, prev, next, toggle, photos]);
 
   async function submit() {
     setSending(true);
@@ -62,11 +92,7 @@ export function SelectionGallery({
       const res = await fetch(`/api/g/${token}/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileIds: [...selected],
-          clientName,
-          note,
-        }),
+        body: JSON.stringify({ fileIds: [...selected], clientName, note }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -95,12 +121,15 @@ export function SelectionGallery({
     );
   }
 
+  const current = lightbox != null ? photos[lightbox] : null;
+  const currentSelected = current ? selected.has(current.drive_file_id) : false;
+
   return (
-    <main className="mx-auto max-w-6xl px-4 pb-28 pt-8">
+    <main className="mx-auto max-w-7xl px-3 pb-28 pt-8 sm:px-6">
       <header className="mb-6">
         <h1 className="font-heading text-2xl font-semibold tracking-tight">{title}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Toca las fotos que quieres elegir.
+          Toca una foto para verla en grande y elegirla.
           {limit != null
             ? ` Puedes elegir hasta ${limit}.`
             : " Elige todas las que quieras."}
@@ -113,43 +142,53 @@ export function SelectionGallery({
         )}
       </header>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-        {photos.map((p) => {
+      {/* Grid grande: pocas columnas y miniaturas nítidas */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {photos.map((p, index) => {
           const isSel = selected.has(p.drive_file_id);
           return (
-            <button
+            <div
               key={p.id}
-              type="button"
-              onClick={() => toggle(p.drive_file_id)}
-              disabled={!isSel && atLimit}
-              className={`group relative aspect-square overflow-hidden rounded-lg border-2 transition-all ${
+              className={`group relative overflow-hidden rounded-lg border-2 transition-all ${
                 isSel ? "border-primary" : "border-transparent"
-              } ${!isSel && atLimit ? "opacity-50" : ""}`}
+              }`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`/api/g/${token}/photo/${p.drive_file_id}?size=600`}
-                alt={p.filename}
-                loading="lazy"
-                className="size-full object-cover"
-              />
-              <span
-                className={`absolute right-2 top-2 flex size-6 items-center justify-center rounded-full transition-all ${
+              <button
+                type="button"
+                onClick={() => setLightbox(index)}
+                className="block aspect-[4/5] w-full cursor-zoom-in"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/api/g/${token}/photo/${p.drive_file_id}?size=1200`}
+                  alt={p.filename}
+                  loading="lazy"
+                  className="size-full object-cover"
+                />
+              </button>
+
+              {/* Check rápido (no abre el visor) */}
+              <button
+                type="button"
+                onClick={() => toggle(p.drive_file_id)}
+                disabled={!isSel && atLimit}
+                title={isSel ? "Quitar" : "Elegir"}
+                className={`absolute right-2 top-2 flex size-9 items-center justify-center rounded-full transition-all ${
                   isSel
                     ? "bg-primary text-primary-foreground"
-                    : "bg-black/40 text-white opacity-0 group-hover:opacity-100"
-                }`}
+                    : "bg-black/45 text-white hover:bg-black/70"
+                } ${!isSel && atLimit ? "cursor-not-allowed opacity-40" : ""}`}
               >
-                <Check className="size-4" />
-              </span>
-            </button>
+                <Check className="size-5" />
+              </button>
+            </div>
           );
         })}
       </div>
 
       {/* Barra fija inferior */}
       <div className="fixed inset-x-0 bottom-0 border-t border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
           <p className="text-sm">
             <span className="font-semibold">{count}</span>
             {limit != null ? ` / ${limit}` : ""} seleccionada(s)
@@ -159,6 +198,64 @@ export function SelectionGallery({
           </Button>
         </div>
       </div>
+
+      {/* Visor a pantalla completa */}
+      {current && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-black/95">
+          <div className="flex items-center justify-between px-4 py-3 text-white/90">
+            <span className="text-sm">
+              {(lightbox ?? 0) + 1} de {photos.length}
+            </span>
+            <button onClick={closeLightbox} className="hover:text-white" title="Cerrar">
+              <X className="size-7" />
+            </button>
+          </div>
+
+          <div className="relative flex flex-1 items-center justify-center overflow-hidden px-2">
+            <button
+              onClick={prev}
+              className="absolute left-2 z-10 flex size-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+              title="Anterior"
+            >
+              <ChevronLeft className="size-6" />
+            </button>
+
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/api/g/${token}/photo/${current.drive_file_id}?size=2000`}
+              alt={current.filename}
+              className="max-h-full max-w-full object-contain"
+            />
+
+            <button
+              onClick={next}
+              className="absolute right-2 z-10 flex size-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+              title="Siguiente"
+            >
+              <ChevronRight className="size-6" />
+            </button>
+          </div>
+
+          <div className="flex justify-center px-4 py-5">
+            <Button
+              size="lg"
+              variant={currentSelected ? "secondary" : "default"}
+              disabled={!currentSelected && atLimit}
+              onClick={() => toggle(current.drive_file_id)}
+              className="min-w-56"
+            >
+              {currentSelected ? (
+                <>
+                  <Check className="mr-1 size-5" />
+                  Elegida — quitar
+                </>
+              ) : (
+                "Elegir esta foto"
+              )}
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
