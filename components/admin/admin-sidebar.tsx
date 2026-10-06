@@ -11,6 +11,8 @@ import {
   Briefcase,
   Inbox,
   Camera,
+  Mail,
+  Contact,
   LogOut,
 } from "lucide-react";
 import { signOut } from "@/app/admin/login/actions";
@@ -25,6 +27,8 @@ const NAV_ITEMS = [
   { href: "/admin/clientes", label: "Clientes", icon: Users, exact: false },
   { href: "/admin/galerias", label: "Galerías", icon: Camera, exact: false },
   { href: "/admin/leads", label: "Mensajes", icon: Inbox, exact: false },
+  { href: "/admin/suscriptores", label: "Suscriptores", icon: Contact, exact: false },
+  { href: "/admin/campanas", label: "Campañas", icon: Mail, exact: false },
 ] as const;
 
 export function AdminSidebar() {
