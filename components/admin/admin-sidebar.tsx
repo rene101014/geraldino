@@ -11,6 +11,7 @@ import {
   Briefcase,
   Inbox,
   Camera,
+  Building2,
   LogOut,
 } from "lucide-react";
 import { signOut } from "@/app/admin/login/actions";
@@ -22,7 +23,8 @@ const NAV_ITEMS = [
   { href: "/admin/contenido", label: "Inicio y bio", icon: FileText, exact: false },
   { href: "/admin/portafolio", label: "Portafolio", icon: Images, exact: false },
   { href: "/admin/servicios", label: "Servicios", icon: Briefcase, exact: false },
-  { href: "/admin/clientes", label: "Clientes", icon: Users, exact: false },
+  { href: "/admin/crm", label: "CRM", icon: Building2, exact: false },
+  { href: "/admin/clientes", label: "Logos", icon: Users, exact: false },
   { href: "/admin/galerias", label: "Galerías", icon: Camera, exact: false },
   { href: "/admin/leads", label: "Mensajes", icon: Inbox, exact: false },
 ] as const;

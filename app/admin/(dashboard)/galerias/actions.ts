@@ -39,6 +39,9 @@ export async function createGallery(
   }
   const d = parsed.data;
 
+  // Opcional: enlazar la galería a un trabajo del CRM al crearla.
+  const projectId = (formData.get("project_id") as string) || null;
+
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("galleries")
@@ -57,6 +60,7 @@ export async function createGallery(
       drive_folder_id: parseFolderId(d.drive_folder),
       selection_limit: d.type === "selection" ? d.selection_limit : null,
       allow_downloads: d.allow_downloads,
+      project_id: projectId,
       status: "draft",
     })
     .select("id")
@@ -67,6 +71,7 @@ export async function createGallery(
   }
 
   revalidatePath("/admin/galerias");
+  if (projectId) revalidatePath("/admin/crm");
   return { error: null, success: true, id: data.id };
 }
 

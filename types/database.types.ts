@@ -34,6 +34,131 @@ export type Database = {
   }
   public: {
     Tables: {
+      crm_accounts: {
+        Row: {
+          address: string | null
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          parent_id: string | null
+          phone: string | null
+          rnc: string | null
+          status: string
+          type: string
+          updated_at: string
+          website_url: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          address?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          parent_id?: string | null
+          phone?: string | null
+          rnc?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+          website_url?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          address?: string | null
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          parent_id?: string | null
+          phone?: string | null
+          rnc?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+          website_url?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_accounts_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "crm_accounts"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      crm_projects: {
+        Row: {
+          account_id: string
+          budget_amount: number | null
+          created_at: string
+          currency: string
+          description: string | null
+          due_date: string | null
+          id: string
+          notes: string | null
+          service_id: string | null
+          start_date: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          budget_amount?: number | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          service_id?: string | null
+          start_date?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          budget_amount?: number | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          service_id?: string | null
+          start_date?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_projects_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "crm_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_projects_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       galleries: {
         Row: {
           allow_downloads: boolean
@@ -49,6 +174,7 @@ export type Database = {
           id: string
           last_synced_at: string | null
           password_hash: string | null
+          project_id: string | null
           selection_limit: number | null
           status: string
           title: string
@@ -71,6 +197,7 @@ export type Database = {
           id?: string
           last_synced_at?: string | null
           password_hash?: string | null
+          project_id?: string | null
           selection_limit?: number | null
           status?: string
           title: string
@@ -93,6 +220,7 @@ export type Database = {
           id?: string
           last_synced_at?: string | null
           password_hash?: string | null
+          project_id?: string | null
           selection_limit?: number | null
           status?: string
           title?: string
@@ -101,7 +229,15 @@ export type Database = {
           updated_at?: string
           visibility?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "galleries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "crm_projects"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       gallery_photos: {
         Row: {

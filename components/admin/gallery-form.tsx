@@ -27,7 +27,15 @@ import {
 import { createGallery, updateGallery } from "@/app/admin/(dashboard)/galerias/actions";
 import type { Gallery } from "@/lib/data/galleries";
 
-export function GalleryForm({ gallery }: { gallery?: Gallery }) {
+export function GalleryForm({
+  gallery,
+  projectId,
+  triggerLabel,
+}: {
+  gallery?: Gallery;
+  projectId?: string;
+  triggerLabel?: string;
+}) {
   const isEdit = !!gallery;
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
@@ -54,6 +62,7 @@ export function GalleryForm({ gallery }: { gallery?: Gallery }) {
       formData.set("delivery_format", deliveryFormat);
       formData.set("visibility", visibility);
       formData.set("allow_downloads", allowDownloads ? "on" : "off");
+      if (projectId) formData.set("project_id", projectId);
 
       const result = isEdit
         ? await updateGallery(gallery!.id, { error: null, success: false }, formData)
@@ -87,7 +96,7 @@ export function GalleryForm({ gallery }: { gallery?: Gallery }) {
         ) : (
           <Button>
             <Plus className="mr-1 size-4" />
-            Nueva galería
+            {triggerLabel ?? "Nueva galería"}
           </Button>
         )}
       </DialogTrigger>
