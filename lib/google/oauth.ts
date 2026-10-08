@@ -163,7 +163,35 @@ export async function getValidAccessToken(client?: DB): Promise<string> {
   });
 
   if (!res.ok) {
-    throw new Error(`No se pudo renovar el token de Google: ${res.status}`);
+    // Google devuelve JSON { error, error_description } cuando falla la
+    // renovación. Lo exponemos para poder diagnosticar en vez de ver solo
+    // el código de estado.
+    const body = await res.text();
+    let googleError = "";
+    try {
+      const parsed = JSON.parse(body) as {
+        error?: string;
+        error_description?: string;
+      };
+      googleError = [parsed.error, parsed.error_description]
+        .filter(Boolean)
+        .join(": ");
+    } catch {
+      googleError = body;
+    }
+
+    // invalid_grant = el refresh token ya no sirve (revocado, cambio de
+    // contraseña, o expirado por app en modo "Testing" tras 7 días). Hay que
+    // reconectar Google desde el panel.
+    if (googleError.includes("invalid_grant")) {
+      throw new Error(
+        "La conexión con Google expiró o fue revocada. Reconecta Google Drive desde el panel de administración.",
+      );
+    }
+
+    throw new Error(
+      `No se pudo renovar el token de Google: ${res.status} ${googleError}`,
+    );
   }
 
   const tokens = (await res.json()) as TokenResponse;
