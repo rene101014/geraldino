@@ -159,6 +159,146 @@ export type Database = {
           }
         ]
       }
+      crm_quote_items: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          line_total: number
+          order_index: number
+          quantity: number
+          quote_id: string
+          service_id: string | null
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          line_total?: number
+          order_index?: number
+          quantity?: number
+          quote_id: string
+          service_id?: string | null
+          unit_price?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          line_total?: number
+          order_index?: number
+          quantity?: number
+          quote_id?: string
+          service_id?: string | null
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_quote_items_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "crm_quotes"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      crm_quotes: {
+        Row: {
+          accepted_at: string | null
+          account_id: string | null
+          client_email: string | null
+          client_name: string | null
+          created_at: string
+          currency: string
+          discount: number
+          id: string
+          notes: string | null
+          project_id: string | null
+          quote_number: string
+          rejected_at: string | null
+          sent_at: string | null
+          status: string
+          subtotal: number
+          tax_amount: number
+          tax_enabled: boolean
+          tax_rate: number
+          terms: string | null
+          title: string
+          token: string
+          total: number
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          account_id?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          created_at?: string
+          currency?: string
+          discount?: number
+          id?: string
+          notes?: string | null
+          project_id?: string | null
+          quote_number?: string
+          rejected_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subtotal?: number
+          tax_amount?: number
+          tax_enabled?: boolean
+          tax_rate?: number
+          terms?: string | null
+          title: string
+          token: string
+          total?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          account_id?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          created_at?: string
+          currency?: string
+          discount?: number
+          id?: string
+          notes?: string | null
+          project_id?: string | null
+          quote_number?: string
+          rejected_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subtotal?: number
+          tax_amount?: number
+          tax_enabled?: boolean
+          tax_rate?: number
+          terms?: string | null
+          title?: string
+          token?: string
+          total?: number
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_quotes_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "crm_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_quotes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "crm_projects"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       galleries: {
         Row: {
           allow_downloads: boolean
