@@ -10,9 +10,11 @@ import {
   Globe,
   MapPin,
   FileText,
+  ReceiptText,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   ACCOUNT_STATUS_LABELS,
   ACCOUNT_TYPE_LABELS,
@@ -137,7 +139,13 @@ export default async function CrmAccountPage({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild size="sm">
+            <Link href={`/admin/cotizaciones/nueva?account=${acc.id}`}>
+              <ReceiptText className="mr-1 size-4" />
+              Nueva cotización
+            </Link>
+          </Button>
           <CrmAccountForm account={acc} agencies={agencies} trigger="edit" />
           <CrmAccountDelete id={acc.id} name={acc.name} isAgency={isAgency} />
         </div>

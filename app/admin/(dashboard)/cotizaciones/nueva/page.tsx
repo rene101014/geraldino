@@ -3,7 +3,12 @@ import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { QuoteForm } from "@/components/admin/quote-form";
 
-export default async function NewQuotePage() {
+export default async function NewQuotePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ account?: string }>;
+}) {
+  const { account } = await searchParams;
   const supabase = await createClient();
   const [accountsRes, servicesRes] = await Promise.all([
     supabase.from("crm_accounts").select("id, name, email").order("name"),
@@ -36,7 +41,11 @@ export default async function NewQuotePage() {
       </h1>
 
       <div className="mt-6">
-        <QuoteForm accounts={accounts} services={services} />
+        <QuoteForm
+          accounts={accounts}
+          services={services}
+          defaultAccountId={account}
+        />
       </div>
     </div>
   );

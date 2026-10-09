@@ -41,19 +41,34 @@ export function QuoteForm({
   accounts,
   services,
   quote,
+  defaultAccountId,
 }: {
   accounts: AccountOption[];
   services: ServiceOption[];
   quote?: QuoteWithItems;
+  defaultAccountId?: string;
 }) {
   const isEdit = !!quote;
   const router = useRouter();
   const [saving, setSaving] = useState(false);
 
-  const [accountId, setAccountId] = useState(quote?.account_id ?? "");
+  // Al crear desde la ficha de un cliente, llega preseleccionado y
+  // prellenamos nombre/email desde esa cuenta.
+  const presetAccount =
+    !quote && defaultAccountId
+      ? accounts.find((a) => a.id === defaultAccountId)
+      : undefined;
+
+  const [accountId, setAccountId] = useState(
+    quote?.account_id ?? defaultAccountId ?? "",
+  );
   const [title, setTitle] = useState(quote?.title ?? "");
-  const [clientName, setClientName] = useState(quote?.client_name ?? "");
-  const [clientEmail, setClientEmail] = useState(quote?.client_email ?? "");
+  const [clientName, setClientName] = useState(
+    quote?.client_name ?? presetAccount?.name ?? "",
+  );
+  const [clientEmail, setClientEmail] = useState(
+    quote?.client_email ?? presetAccount?.email ?? "",
+  );
   const [currency, setCurrency] = useState(quote?.currency ?? "DOP");
   const [taxEnabled, setTaxEnabled] = useState(quote?.tax_enabled ?? true);
   const [taxRate, setTaxRate] = useState(String(quote?.tax_rate ?? 18));
